@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=16G
+#SBATCH --time=03:00:00
+#SBATCH --job-name=busco_Trinity
+#SBATCH --mail-user=honghong.fang@students.unibe.ch
+#SBATCH --mail-type=fail,begin,end
+#SBATCH --output=/data/users/hfang/newassembly/evaluations/output_trinity_busco_%j.o
+#SBATCH --error=/data/users/hfang/newassembly/evaluations/error_trinity_busco_%j.e
+#SBATCH --partition=pall
+
+# Define paths
+WORKDIR=/data/users/hfang/newassembly
+
+# Use BUSCO with container
+singularity exec \
+--bind $WORKDIR \
+/data/courses/assembly-annotation-course/containers2/busco_v5.1.2_cv1.sif \
+busco -i ${WORKDIR}/assemblies/trinity/Trinity.fasta -l brassicales_odb10 -o initial_assembly --out_path ${WORKDIR}/evaluations/trinity/busco \
+-m genome --cpu 4
